@@ -224,12 +224,30 @@ const Wrap = React.createClass({
 	}
 })
 
+class SelectOptions extends React.Component {
+	constructor(props, context) {
+		super(props, context);
+		this.state = {selectedValue: 3};
+	}
+
+	render() {
+		return <div>
+			<h1>select Node</h1>
+			<select value={this.state.selectedValue} ref="selectNode" id="selectNode">
+				<option value={1}>Bob</option>
+				<option value={2}>Andrew</option>
+				<option value={3}>Carl</option>
+				<option value={4}>Collin</option>
+			</select>
+			</div>;
+	}
+}
 
 var wrap = <Wrap count={ 10 } />
 
 let update = count => {
 	return React.render(
-		wrap,
+		<SelectOptions />,
 		document.getElementById('container')
 	)
 }

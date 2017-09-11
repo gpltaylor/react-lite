@@ -41,6 +41,21 @@ function initVnode(vnode, parentContext, namespaceURI) {
     var vtype = vnode.vtype;
 
     var node = null;
+
+    // Update option on select nodes
+    // TODO: Review React usage on value/defaultValue/and multiple selected
+    // https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
+    // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+    if (vnode.type === "select") {
+        var options = vnode.props.children;
+        var selectedItems = options.filter(function (item) {
+            return item.props.value === vnode.props.value;
+        });
+        selectedItems.forEach(function (element) {
+            element.props.selected = true;
+        }, this);
+    }
+
     if (!vtype) {
         // init text
         node = document.createTextNode(vnode);
@@ -57,6 +72,7 @@ function initVnode(vnode, parentContext, namespaceURI) {
         // init comment
         node = document.createComment('react-text: ' + (vnode.uid || getUid()));
     }
+
     return node;
 }
 
@@ -84,6 +100,7 @@ function updateVnode(vnode, newVnode, node, parentContext) {
         updateVChildren(vnode, newVnode, node, parentContext);
         updateVelem(vnode, newVnode, node, parentContext);
     }
+
     return node;
 }
 
