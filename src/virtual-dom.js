@@ -33,17 +33,7 @@ export function initVnode(vnode, parentContext, namespaceURI) {
     let { vtype } = vnode
     let node = null
 
-    // Update option on select nodes
-    // TODO: Review React usage on value/defaultValue/and multiple selected
-    // https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
-    // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-    if(vnode.type === "select") {
-        var options = vnode.props.children;
-        var selectedItems = options.filter(item => item.props.value === vnode.props.value)
-        selectedItems.forEach((element) => {
-            element.props.selected = true
-        }, this);
-    }
+    convertSelectElement(vnode)
 
     if (!vtype) { // init text
         node = document.createTextNode(vnode)
@@ -62,6 +52,8 @@ export function initVnode(vnode, parentContext, namespaceURI) {
 
 function updateVnode(vnode, newVnode, node, parentContext) {
     let { vtype } = vnode
+
+    convertSelectElement(vnode)   
 
     if (vtype === VCOMPONENT) {
         return updateVcomponent(vnode, newVnode, node, parentContext)
@@ -645,4 +637,22 @@ function shouldIgnoreUpdate(node) {
     }
 
     return true
+}
+
+/**
+ * @Bugfix IE/Edge: Allow the option to be selected based on "props.value" of the select element 
+ * @TODO: Review React usage on value/defaultValue/and multiple selected
+ * https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
+ * @param {*} vnode 
+ */
+function convertSelectElement(vnode) {
+    if(vnode.type === "select") {
+        var options = vnode.props.children;
+        var selectedItems = options.filter(item => item.props.value === vnode.props.value)
+        selectedItems.forEach((element) => {
+            element.props.selected = true
+        }, this)
+    }
 }
