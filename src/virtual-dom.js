@@ -648,11 +648,35 @@ function shouldIgnoreUpdate(node) {
  * @param {*} vnode 
  */
 function convertSelectElement(vnode) {
-    if(vnode.type === "select") {
-        var options = vnode.props.children;
-        var selectedItems = options.filter(item => item.props.value === vnode.props.value)
-        selectedItems.forEach((element) => {
-            element.props.selected = true
-        }, this)
+    if (vnode.type === "select") {
+        var propValue = vnode.props.value
+        var props = vnode.props
+        var options = vnode.props.children
+
+        if (typeof propValue == "string") {
+            var selectedItems = options.filter(item => item.props.value === propValue)
+            selectedItems.forEach((element) => {
+                element.props.selected = true
+                return
+            }, this)
+        }
+
+        // multi select
+        if (_.isArr(propValue) && props.multiple) {
+            let selectedValue = {}
+            // Key the selected values
+            for (let i = 0; i < propValue.length; i++) {
+                // Prefix to avoid chaos with special keys.
+                selectedValue['$' + propValue[i]] = true                
+            }
+
+            // Find option in selected key
+            for (let i = 0; i < options.length; i++) {
+                var selected = selectedValue.hasOwnProperty('$' + options[i].props.value)
+                if (options[i].props.selected !== selected) {
+                    options[i].props.selected = selected
+                }
+            }
+        }
     }
 }

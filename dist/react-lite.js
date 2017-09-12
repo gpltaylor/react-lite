@@ -677,13 +677,37 @@
    */
   function convertSelectElement(vnode) {
       if (vnode.type === "select") {
+          var propValue = vnode.props.value;
+          var props = vnode.props;
           var options = vnode.props.children;
-          var selectedItems = options.filter(function (item) {
-              return item.props.value === vnode.props.value;
-          });
-          selectedItems.forEach(function (element) {
-              element.props.selected = true;
-          }, this);
+
+          if (typeof propValue == "string") {
+              var selectedItems = options.filter(function (item) {
+                  return item.props.value === propValue;
+              });
+              selectedItems.forEach(function (element) {
+                  element.props.selected = true;
+                  return;
+              }, this);
+          }
+
+          // multi select
+          if (isArr(propValue) && props.multiple) {
+              var selectedValue = {};
+              // Key the selected values
+              for (var i = 0; i < propValue.length; i++) {
+                  // Prefix to avoid chaos with special keys.
+                  selectedValue['$' + propValue[i]] = true;
+              }
+
+              // Find option in selected key
+              for (var i = 0; i < options.length; i++) {
+                  var selected = selectedValue.hasOwnProperty('$' + options[i].props.value);
+                  if (options[i].props.selected !== selected) {
+                      options[i].props.selected = selected;
+                  }
+              }
+          }
       }
   }
 
