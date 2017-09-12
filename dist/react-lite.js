@@ -46,8 +46,6 @@
 
       var node = null;
 
-      convertSelectElement(vnode);
-
       if (!vtype) {
           // init text
           node = document.createTextNode(vnode);
@@ -70,8 +68,6 @@
 
   function updateVnode(vnode, newVnode, node, parentContext) {
       var vtype = vnode.vtype;
-
-      convertSelectElement(vnode);
 
       if (vtype === VCOMPONENT) {
           return updateVcomponent(vnode, newVnode, node, parentContext);
@@ -181,6 +177,7 @@
           node = document.createElement(type);
       }
 
+      convertSelectElement(velem);
       initVchildren(velem, node, parentContext);
 
       var isCustomComponent = type.indexOf('-') >= 0 || props.is != null;
@@ -198,7 +195,8 @@
       var vchildren = node.vchildren = getFlattenChildren(velem);
       var namespaceURI = node.namespaceURI;
       for (var i = 0, len = vchildren.length; i < len; i++) {
-          node.appendChild(initVnode(vchildren[i], parentContext, namespaceURI));
+          var newNode = initVnode(vchildren[i], parentContext, namespaceURI);
+          node.appendChild(newNode);
       }
   }
 
@@ -702,9 +700,8 @@
 
               // Find option in selected key
               for (var i = 0; i < options.length; i++) {
-                  var selected = selectedValue.hasOwnProperty('$' + options[i].props.value);
-                  if (options[i].props.selected !== selected) {
-                      options[i].props.selected = selected;
+                  if (selectedValue.hasOwnProperty('$' + options[i].props.value)) {
+                      options[i].props.selected = true;
                   }
               }
           }

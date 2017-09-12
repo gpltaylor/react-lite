@@ -32,9 +32,7 @@ export function createVnode(vtype, type, props, key, ref) {
 export function initVnode(vnode, parentContext, namespaceURI) {
     let { vtype } = vnode
     let node = null
-
-    convertSelectElement(vnode)
-
+    
     if (!vtype) { // init text
         node = document.createTextNode(vnode)
     } else if (vtype === VELEMENT) { // init element
@@ -52,8 +50,6 @@ export function initVnode(vnode, parentContext, namespaceURI) {
 
 function updateVnode(vnode, newVnode, node, parentContext) {
     let { vtype } = vnode
-
-    convertSelectElement(vnode)   
 
     if (vtype === VCOMPONENT) {
         return updateVcomponent(vnode, newVnode, node, parentContext)
@@ -158,7 +154,7 @@ function initVelem(velem, parentContext, namespaceURI) {
         node = document.createElement(type)
     }
 
-
+    convertSelectElement(velem)
     initVchildren(velem, node, parentContext)
 
     let isCustomComponent = type.indexOf('-') >= 0 || props.is != null
@@ -176,7 +172,8 @@ function initVchildren(velem, node, parentContext) {
     let vchildren = node.vchildren = getFlattenChildren(velem)
     let namespaceURI = node.namespaceURI
     for (let i = 0, len = vchildren.length; i < len; i++) {
-        node.appendChild(initVnode(vchildren[i], parentContext, namespaceURI))
+        let newNode = initVnode(vchildren[i], parentContext, namespaceURI)
+        node.appendChild(newNode)
     }
 }
 
@@ -672,9 +669,8 @@ function convertSelectElement(vnode) {
 
             // Find option in selected key
             for (let i = 0; i < options.length; i++) {
-                var selected = selectedValue.hasOwnProperty('$' + options[i].props.value)
-                if (options[i].props.selected !== selected) {
-                    options[i].props.selected = selected
+                if (selectedValue.hasOwnProperty('$' + options[i].props.value)) {
+                    options[i].props.selected = true
                 }
             }
         }
