@@ -43,7 +43,7 @@ describe('Render Select with multiple values', function() {
   it('should mark correct option as selected', function() {
     var instance = ReactTestUtils.renderIntoDocument(<Component />);
     var root = ReactDOM.findDOMNode(instance);
-
+    // NOTE: If the new version of Jest this should be ".selected"
     expect(root.childNodes[0].options[0]._selectedness).toBe(true);
     expect(root.childNodes[0].options[1]._selectedness).toBe(false);
     expect(root.childNodes[0].options[2]._selectedness).toBe(true);
@@ -72,14 +72,14 @@ describe('Render Select with single value', function() {
     }
   }
 
-  it.only('should mark correct option as selected', function() {
+  it('should mark correct option as selected', function() {
     var instance = ReactTestUtils.renderIntoDocument(<Component />);
     var root = ReactDOM.findDOMNode(instance);
 
-    expect(root.childNodes[0].options[0]._selectedness).toBe(undefined);
+    expect(root.childNodes[0].options[0]._selectedness).toBe(false);
     expect(root.childNodes[0].options[1]._selectedness).toBe(true);
-    expect(root.childNodes[0].options[2]._selectedness).toBe(undefined);
-    expect(root.childNodes[0].options[3]._selectedness).toBe(undefined);
+    expect(root.childNodes[0].options[2]._selectedness).toBe(false);
+    expect(root.childNodes[0].options[3]._selectedness).toBe(false);
   });
 
 });
