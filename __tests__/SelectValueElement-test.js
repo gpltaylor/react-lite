@@ -76,10 +76,10 @@ describe('Render Select with single value', function() {
     var instance = ReactTestUtils.renderIntoDocument(<Component />);
     var root = ReactDOM.findDOMNode(instance);
 
-    expect(root.childNodes[0].options[0]._selectedness).toBe(false);
+    expect(root.childNodes[0].options[0]._selectedness).toBe(undefined);
     expect(root.childNodes[0].options[1]._selectedness).toBe(true);
-    expect(root.childNodes[0].options[2]._selectedness).toBe(false);
-    expect(root.childNodes[0].options[3]._selectedness).toBe(false);
+    expect(root.childNodes[0].options[2]._selectedness).toBe(undefined);
+    expect(root.childNodes[0].options[3]._selectedness).toBe(undefined);
   });
 
 });

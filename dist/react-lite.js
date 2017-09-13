@@ -178,6 +178,9 @@
       }
 
       convertSelectElement(velem);
+      if (type == "select") velem.props.children.forEach(function (element) {
+          // console.log("value", velem.props.value, "type:", element.type, "element.Props:", element.props, "selected:", element.props.selected)
+      }, this);
 
       var isCustomComponent = type.indexOf('-') >= 0 || props.is != null;
       setProps(node, props, isCustomComponent);
@@ -676,7 +679,7 @@
           var props = vnode.props;
           var options = vnode.props.children;
 
-          if (typeof propValue == "string") {
+          if (typeof propValue == "string" || typeof propValue == "number") {
               var selectedItems = options.filter(function (item) {
                   return item.props.value === propValue;
               });
@@ -1790,13 +1793,9 @@
    */
 
   function setPropValue(node, name, value) {
+
       var propInfo = properties.hasOwnProperty(name) && properties[name];
       if (propInfo) {
-          // If we are select element and value is array then don't set value
-          // if(node.localName == "select" && _.isArr(value)) {
-          //     node.multiple = true
-          // }
-
           // should delete value from dom
           if (value == null || propInfo.hasBooleanValue && !value || propInfo.hasNumericValue && isNaN(value) || propInfo.hasPositiveNumericValue && value < 1 || propInfo.hasOverloadedBooleanValue && value === false) {
               removePropValue(node, name);
