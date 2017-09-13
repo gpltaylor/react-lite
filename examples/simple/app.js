@@ -345,7 +345,7 @@
 			_classCallCheck(this, SelectOptions);
 
 			_get(Object.getPrototypeOf(SelectOptions.prototype), 'constructor', this).call(this, props, context);
-			this.state = { selectedValue: [1, 3, 4] };
+			this.state = { selectedValue: 3 };
 		}
 
 		_createClass(SelectOptions, [{
@@ -361,7 +361,7 @@
 					),
 					React.createElement(
 						'select',
-						{ value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode', multiple: true },
+						{ value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode' },
 						React.createElement(
 							'option',
 							{ value: 1 },
