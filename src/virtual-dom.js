@@ -158,6 +158,8 @@ function initVelem(velem, parentContext, namespaceURI) {
     initVchildren(velem, node, parentContext)
 
     let isCustomComponent = type.indexOf('-') >= 0 || props.is != null
+
+
     _.setProps(node, props, isCustomComponent)
 
     if (velem.ref != null) {
@@ -638,10 +640,6 @@ function shouldIgnoreUpdate(node) {
 
 /**
  * @Bugfix IE/Edge: Allow the option to be selected based on "props.value" of the select element 
- * @TODO: Review React usage on value/defaultValue/and multiple selected
- * https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
- * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
- * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
  * @param {*} vnode 
  */
 function convertSelectElement(vnode) {

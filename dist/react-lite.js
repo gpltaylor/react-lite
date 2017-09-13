@@ -181,6 +181,7 @@
       initVchildren(velem, node, parentContext);
 
       var isCustomComponent = type.indexOf('-') >= 0 || props.is != null;
+
       setProps(node, props, isCustomComponent);
 
       if (velem.ref != null) {
@@ -667,10 +668,6 @@
 
   /**
    * @Bugfix IE/Edge: Allow the option to be selected based on "props.value" of the select element 
-   * @TODO: Review React usage on value/defaultValue/and multiple selected
-   * https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
-   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
    * @param {*} vnode 
    */
   function convertSelectElement(vnode) {
@@ -1795,6 +1792,25 @@
   function setPropValue(node, name, value) {
       var propInfo = properties.hasOwnProperty(name) && properties[name];
       if (propInfo) {
+          // If we are select element and value is array then don't set value
+          if (node.localName == "select" && isArr(value)) {
+              node.multiple = true;
+              node.value = null;
+              var selectedValue = {};
+              // Key the selected values
+              for (var i = 0; i < value.length; i++) {
+                  // Prefix to avoid chaos with special keys.
+                  selectedValue['$' + value[i]] = true;
+              }
+
+              // Find option in selected key
+              for (var i = 0; i < node.options.length; i++) {
+                  node.options[i].selected = selectedValue.hasOwnProperty('$' + node.options[i].value);
+              }
+
+              return;
+          }
+
           // should delete value from dom
           if (value == null || propInfo.hasBooleanValue && !value || propInfo.hasNumericValue && isNaN(value) || propInfo.hasPositiveNumericValue && value < 1 || propInfo.hasOverloadedBooleanValue && value === false) {
               removePropValue(node, name);

@@ -1,5 +1,11 @@
 # Select option
 
+## Refs
+ * @TODO: Review React usage on value/defaultValue/and multiple selected
+ * https://github.com/facebook/react/blob/80411ea9b47a14ed3de6993fd64fba1d79ec605d/src/renderers/dom/fiber/wrappers/ReactDOMFiberSelect.js#L82
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+ * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
+
 There is an issue in IE where the option is not being selected based on the Select element.
 
 ## util.js - setProps
@@ -26,4 +32,14 @@ However, at the end when the select element is added to the div, it looses these
 # properties - setPropValue
 Holds a list of elmements and their allowed properties?
 Where is is data coming from?
+
+# Issue
+I don't think you can set the select.value to an array in setProps
+This is being turned into an empty string
+
+Might have to skip setting the value as I think this forced the DOM to reload this element and it's children
+
+# DOM Node vs vElement
+the DOM is not being created correctly. Select element is hitting "setPropValue" without the "mulitple" being set.
+this means that it can't set multiple options (The Browser rendering disables this I think).
 
