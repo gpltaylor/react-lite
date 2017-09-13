@@ -18,25 +18,6 @@ import * as _ from './util'
 export function setPropValue(node, name, value) {
     let propInfo = properties.hasOwnProperty(name) && properties[name]
     if (propInfo) {
-        // If we are select element and value is array then don't set value
-        if(node.localName == "select" && _.isArr(value)) {
-            node.multiple = true
-            node.value = null
-            let selectedValue = {}
-            // Key the selected values
-            for (let i = 0; i < value.length; i++) {
-                // Prefix to avoid chaos with special keys.
-                selectedValue['$' + value[i]] = true                
-            }
-
-            // Find option in selected key
-            for (let i = 0; i < node.options.length; i++) {
-                node.options[i].selected = selectedValue.hasOwnProperty('$' + node.options[i].value)
-            }
-
-            return
-        }
-
         // should delete value from dom
         if (value == null ||
             (propInfo.hasBooleanValue && !value) ||

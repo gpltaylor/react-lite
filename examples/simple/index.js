@@ -227,7 +227,7 @@ const Wrap = React.createClass({
 class SelectOptions extends React.Component {
 	constructor(props, context) {
 		super(props, context);
-		this.state = {selectedValue: [2, 4]};
+		this.state = {selectedValue: [1, 3, 4]};
 	}
 
 	render() {

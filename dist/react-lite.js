@@ -178,11 +178,11 @@
       }
 
       convertSelectElement(velem);
-      initVchildren(velem, node, parentContext);
 
       var isCustomComponent = type.indexOf('-') >= 0 || props.is != null;
-
       setProps(node, props, isCustomComponent);
+
+      initVchildren(velem, node, parentContext);
 
       if (velem.ref != null) {
           addItem(pendingRefs, velem);
@@ -1793,23 +1793,9 @@
       var propInfo = properties.hasOwnProperty(name) && properties[name];
       if (propInfo) {
           // If we are select element and value is array then don't set value
-          if (node.localName == "select" && isArr(value)) {
-              node.multiple = true;
-              node.value = null;
-              var selectedValue = {};
-              // Key the selected values
-              for (var i = 0; i < value.length; i++) {
-                  // Prefix to avoid chaos with special keys.
-                  selectedValue['$' + value[i]] = true;
-              }
-
-              // Find option in selected key
-              for (var i = 0; i < node.options.length; i++) {
-                  node.options[i].selected = selectedValue.hasOwnProperty('$' + node.options[i].value);
-              }
-
-              return;
-          }
+          // if(node.localName == "select" && _.isArr(value)) {
+          //     node.multiple = true
+          // }
 
           // should delete value from dom
           if (value == null || propInfo.hasBooleanValue && !value || propInfo.hasNumericValue && isNaN(value) || propInfo.hasPositiveNumericValue && value < 1 || propInfo.hasOverloadedBooleanValue && value === false) {

@@ -43,3 +43,18 @@ Might have to skip setting the value as I think this forced the DOM to reload th
 the DOM is not being created correctly. Select element is hitting "setPropValue" without the "mulitple" being set.
 this means that it can't set multiple options (The Browser rendering disables this I think).
 
+If we set "selected" on the options, and the select.multiple is set to false, then the DOM/Browser will reset all options and update the last item.
+We need to make sure that the "select.multiple" is true before adding the options to the DOM element
+
+# SetProps
+The select option was being created without any attributes being set. Child nodes where being added to the element whilst in a "blank" state.
+In some cases (like a multi select) the DOM is protected from invalid state, for example, multiple items selected on a "select" element that does not 
+support this. In this case the DOM option elements are reset automatically.
+
+Swapping the order, allowing the element attributes to be set before creating the children nodes.
+
+```
+_.setProps(node, props, isCustomComponent)
+initVchildren(velem, node, parentContext)
+```
+

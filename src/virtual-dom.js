@@ -155,12 +155,11 @@ function initVelem(velem, parentContext, namespaceURI) {
     }
 
     convertSelectElement(velem)
-    initVchildren(velem, node, parentContext)
 
     let isCustomComponent = type.indexOf('-') >= 0 || props.is != null
-
-
     _.setProps(node, props, isCustomComponent)
+
+    initVchildren(velem, node, parentContext)
 
     if (velem.ref != null) {
         _.addItem(pendingRefs, velem)

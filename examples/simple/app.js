@@ -345,7 +345,7 @@
 			_classCallCheck(this, SelectOptions);
 
 			_get(Object.getPrototypeOf(SelectOptions.prototype), 'constructor', this).call(this, props, context);
-			this.state = { selectedValue: [2, 4] };
+			this.state = { selectedValue: [1, 3, 4] };
 		}
 
 		_createClass(SelectOptions, [{
