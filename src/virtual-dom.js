@@ -154,10 +154,6 @@ function initVelem(velem, parentContext, namespaceURI) {
     }
 
     convertSelectElement(velem)
-    if(type == "select")
-        velem.props.children.forEach(function(element) {
-            // console.log("value", velem.props.value, "type:", element.type, "element.Props:", element.props, "selected:", element.props.selected)
-        }, this);
 
     let isCustomComponent = type.indexOf('-') >= 0 || props.is != null
     _.setProps(node, props, isCustomComponent)
