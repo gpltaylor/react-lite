@@ -345,10 +345,17 @@
 			_classCallCheck(this, SelectOptions);
 
 			_get(Object.getPrototypeOf(SelectOptions.prototype), 'constructor', this).call(this, props, context);
-			this.state = { selectedValue: 3 };
+			this.state = { selectedValue: [2, 4] };
 		}
 
 		_createClass(SelectOptions, [{
+			key: 'update',
+			value: function update() {
+				this.setState({
+					selectedValue: [1, 3]
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				return React.createElement(
@@ -356,12 +363,12 @@
 					null,
 					React.createElement(
 						'h1',
-						null,
+						{ onClick: this.update.bind(this) },
 						'select Node 5'
 					),
 					React.createElement(
 						'select',
-						{ value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode' },
+						{ value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode', multiple: true },
 						React.createElement(
 							'option',
 							{ value: 1 },

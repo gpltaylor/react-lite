@@ -67,8 +67,8 @@ function updateVnode(vnode, newVnode, node, parentContext) {
         updateVelem(vnode, newVnode, node, parentContext)
         initVchildren(newVnode, node, parentContext)
     } else {
-        updateVChildren(vnode, newVnode, node, parentContext)
         updateVelem(vnode, newVnode, node, parentContext)
+        updateVChildren(vnode, newVnode, node, parentContext)
     }
     return node
 }
@@ -94,6 +94,8 @@ function applyUpdate(data) {
 
     // update
     if (!data.shouldIgnore) {
+        convertSelectElement(vnode)
+
         if (!vnode.vtype) {
             newNode.replaceData(0, newNode.length, data.newVnode)
         } else if (vnode.vtype === VELEMENT) {
@@ -251,6 +253,7 @@ function diffVchildren(patches, vnode, newVnode, node, parentContext) {
                 continue
             }
             let newVnode = newVchildren[j]
+            convertSelectElement(newVnode)
             if (vnode === newVnode) {
                 updates[j] = {
                     shouldIgnore: shouldIgnoreUpdate(node),

@@ -101,6 +101,11 @@ function removeProp(elem, key, oldValue, isCustomComponent) {
 }
 
 function patchProp(elem, key, value, oldValue, isCustomComponent) {
+    // If ele.localName == "select" then updating value will detach the options
+    if (elem.localName == "select" && key == "value" && isArr(value)) {
+        return
+    }
+
     if (key === 'value' || key === 'checked') {
         oldValue = elem[key]
     }

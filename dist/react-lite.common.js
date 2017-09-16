@@ -41,7 +41,6 @@ function initVnode(vnode, parentContext, namespaceURI) {
     var vtype = vnode.vtype;
 
     var node = null;
-
     if (!vtype) {
         // init text
         node = document.createTextNode(vnode);
@@ -58,7 +57,6 @@ function initVnode(vnode, parentContext, namespaceURI) {
         // init comment
         node = document.createComment('react-text: ' + (vnode.uid || getUid()));
     }
-
     return node;
 }
 
@@ -83,10 +81,9 @@ function updateVnode(vnode, newVnode, node, parentContext) {
         updateVelem(vnode, newVnode, node, parentContext);
         initVchildren(newVnode, node, parentContext);
     } else {
-        updateVChildren(vnode, newVnode, node, parentContext);
         updateVelem(vnode, newVnode, node, parentContext);
+        updateVChildren(vnode, newVnode, node, parentContext);
     }
-
     return node;
 }
 
@@ -97,6 +94,9 @@ function updateVChildren(vnode, newVnode, node, parentContext) {
         creates: []
     };
     diffVchildren(patches, vnode, newVnode, node, parentContext);
+    // list of elemetns to update (patches.updates are in the wrong order)
+    // should go from the parent to the child
+
     flatEach(patches.removes, applyDestroy);
     flatEach(patches.updates, applyUpdate);
     flatEach(patches.creates, applyCreate);
@@ -111,6 +111,8 @@ function applyUpdate(data) {
 
     // update
     if (!data.shouldIgnore) {
+        convertSelectElement(vnode);
+
         if (!vnode.vtype) {
             newNode.replaceData(0, newNode.length, data.newVnode);
         } else if (vnode.vtype === VELEMENT) {
@@ -195,8 +197,7 @@ function initVchildren(velem, node, parentContext) {
     var vchildren = node.vchildren = getFlattenChildren(velem);
     var namespaceURI = node.namespaceURI;
     for (var i = 0, len = vchildren.length; i < len; i++) {
-        var newNode = initVnode(vchildren[i], parentContext, namespaceURI);
-        node.appendChild(newNode);
+        node.appendChild(initVnode(vchildren[i], parentContext, namespaceURI));
     }
 }
 
@@ -268,6 +269,7 @@ function diffVchildren(patches, vnode, newVnode, node, parentContext) {
     var creates = null;
 
     // isEqual
+    // @idea: possible update here
     for (var i = 0; i < vchildrenLen; i++) {
         var _vnode = vchildren[i];
         for (var j = 0; j < newVchildrenLen; j++) {
@@ -275,6 +277,7 @@ function diffVchildren(patches, vnode, newVnode, node, parentContext) {
                 continue;
             }
             var _newVnode = newVchildren[j];
+            convertSelectElement(_newVnode);
             if (_vnode === _newVnode) {
                 updates[j] = {
                     shouldIgnore: shouldIgnoreUpdate(node),
@@ -354,6 +357,7 @@ function diffVchildren(patches, vnode, newVnode, node, parentContext) {
 function updateVelem(velem, newVelem, node) {
     var isCustomComponent = velem.type.indexOf('-') >= 0 || velem.props.is != null;
     patchProps(node, velem.props, newVelem.props, isCustomComponent);
+
     if (velem.ref !== newVelem.ref) {
         detachRef(velem.refs, velem.ref, node);
         attachRef(newVelem.refs, newVelem.ref, node);
@@ -1789,7 +1793,6 @@ function checkMask(value, bitmask) {
  */
 
 function setPropValue(node, name, value) {
-
     var propInfo = properties.hasOwnProperty(name) && properties[name];
     if (propInfo) {
         // should delete value from dom
@@ -1944,6 +1947,11 @@ function removeProp(elem, key, oldValue, isCustomComponent) {
 }
 
 function patchProp(elem, key, value, oldValue, isCustomComponent) {
+    // If ele.localName == "select" then updating value will detach the options
+    if (elem.localName == "select" && key == "value" && isArr(value)) {
+        return;
+    }
+
     if (key === 'value' || key === 'checked') {
         oldValue = elem[key];
     }
