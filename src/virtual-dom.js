@@ -32,7 +32,6 @@ export function createVnode(vtype, type, props, key, ref) {
 export function initVnode(vnode, parentContext, namespaceURI) {
     let { vtype } = vnode
     let node = null
-    
     if (!vtype) { // init text
         node = document.createTextNode(vnode)
     } else if (vtype === VELEMENT) { // init element
@@ -43,8 +42,7 @@ export function initVnode(vnode, parentContext, namespaceURI) {
         node = initVstateless(vnode, parentContext, namespaceURI)
     } else if (vtype === VCOMMENT) { // init comment
         node = document.createComment(`react-text: ${ vnode.uid || _.getUid() }`)
-    }   
-
+    }
     return node
 }
 
@@ -72,7 +70,6 @@ function updateVnode(vnode, newVnode, node, parentContext) {
         updateVChildren(vnode, newVnode, node, parentContext)
         updateVelem(vnode, newVnode, node, parentContext)
     }
-
     return node
 }
 
@@ -177,8 +174,7 @@ function initVchildren(velem, node, parentContext) {
     let vchildren = node.vchildren = getFlattenChildren(velem)
     let namespaceURI = node.namespaceURI
     for (let i = 0, len = vchildren.length; i < len; i++) {
-        let newNode = initVnode(vchildren[i], parentContext, namespaceURI)
-        node.appendChild(newNode)
+        node.appendChild(initVnode(vchildren[i], parentContext, namespaceURI))
     }
 }
 

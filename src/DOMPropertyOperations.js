@@ -7,7 +7,6 @@ import {
     isCustomAttribute,
     VALID_ATTRIBUTE_NAME_REGEX
 } from './DOMConfig'
-import * as _ from './util'
 /**
  * Sets the value for a property on a node.
  *
@@ -16,7 +15,6 @@ import * as _ from './util'
  * @param {*} value
  */
 export function setPropValue(node, name, value) {
-    
     let propInfo = properties.hasOwnProperty(name) && properties[name]
     if (propInfo) {
         // should delete value from dom
