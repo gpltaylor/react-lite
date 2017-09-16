@@ -352,7 +352,14 @@
 			key: 'update',
 			value: function update() {
 				this.setState({
-					selectedValue: [1, 3]
+					selectedValue: [1, 2, 3, 4]
+				});
+			}
+		}, {
+			key: 'onChange',
+			value: function onChange(e) {
+				this.setState({
+					selectedValue: e.target.value
 				});
 			}
 		}, {
@@ -364,11 +371,14 @@
 					React.createElement(
 						'h1',
 						{ onClick: this.update.bind(this) },
-						'select Node 5'
+						'select Node 5 ',
+						this.state.selectedValue
 					),
 					React.createElement(
 						'select',
-						{ value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode', multiple: true },
+						{
+							onChange: this.onChange.bind(this),
+							value: this.state.selectedValue, ref: 'selectNode', id: 'selectNode', multiple: true },
 						React.createElement(
 							'option',
 							{ value: 1 },

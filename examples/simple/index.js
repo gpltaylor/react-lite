@@ -232,14 +232,22 @@ class SelectOptions extends React.Component {
 
 	update() {
 		this.setState( {
-			selectedValue: [1,3]
+			selectedValue: [1,2,3,4]
 		})
+	}
+
+	onChange(e) {
+		this.setState( {
+			selectedValue: e.target.value
+		})		
 	}
 
 	render() {
 		return <div>
-			<h1 onClick={this.update.bind(this)}>select Node 5</h1>
-			<select value={this.state.selectedValue} ref="selectNode" id="selectNode" multiple>
+			<h1 onClick={this.update.bind(this)}>select Node 5 {this.state.selectedValue}</h1>
+			<select 
+				onChange={this.onChange.bind(this)} 
+				value={this.state.selectedValue} ref="selectNode" id="selectNode" multiple>
 				<option value={1}>Bob</option>
 				<option value={2}>Andrew</option>
 				<option value={3}>Carl</option>

@@ -98,9 +98,6 @@
           creates: []
       };
       diffVchildren(patches, vnode, newVnode, node, parentContext);
-      // list of elemetns to update (patches.updates are in the wrong order)
-      // should go from the parent to the child
-
       flatEach(patches.removes, applyDestroy);
       flatEach(patches.updates, applyUpdate);
       flatEach(patches.creates, applyCreate);
@@ -115,7 +112,7 @@
 
       // update
       if (!data.shouldIgnore) {
-          convertSelectElement(vnode);
+          convertSelectElement(data.newVnode);
 
           if (!vnode.vtype) {
               newNode.replaceData(0, newNode.length, data.newVnode);
@@ -273,7 +270,6 @@
       var creates = null;
 
       // isEqual
-      // @idea: possible update here
       for (var i = 0; i < vchildrenLen; i++) {
           var _vnode = vchildren[i];
           for (var j = 0; j < newVchildrenLen; j++) {
@@ -361,7 +357,6 @@
   function updateVelem(velem, newVelem, node) {
       var isCustomComponent = velem.type.indexOf('-') >= 0 || velem.props.is != null;
       patchProps(node, velem.props, newVelem.props, isCustomComponent);
-
       if (velem.ref !== newVelem.ref) {
           detachRef(velem.refs, velem.ref, node);
           attachRef(newVelem.refs, newVelem.ref, node);

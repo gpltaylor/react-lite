@@ -94,7 +94,7 @@ function applyUpdate(data) {
 
     // update
     if (!data.shouldIgnore) {
-        convertSelectElement(vnode)
+        convertSelectElement(data.newVnode)
 
         if (!vnode.vtype) {
             newNode.replaceData(0, newNode.length, data.newVnode)

@@ -58,3 +58,17 @@ _.setProps(node, props, isCustomComponent)
 initVchildren(velem, node, parentContext)
 ```
 
+# Updating state programatically
+This was not working when updating using an onClick event.
+Required the updateVelement to update the select and child options. This required the 
+populating of the elements props to be done before the children.
+
+There was an issue with updating the select.value when using multiple.
+The value of select.value can only be a scalar, therefore updating to an array set this to null 
+and unselected all the options automatically.
+
+There is an issue at the moment where the DOM can be different from vDOM.
+If you don't updating state then selecting an option, then the check for differences will review previous 
+props vs current props. There will be no change and therefore the DOM will not be updating. However, the 
+DOM will infact, not match the vDOM.
+
