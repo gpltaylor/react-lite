@@ -67,8 +67,8 @@ function updateVnode(vnode, newVnode, node, parentContext) {
         updateVelem(vnode, newVnode, node, parentContext)
         initVchildren(newVnode, node, parentContext)
     } else {
-        updateVelem(vnode, newVnode, node, parentContext)
         updateVChildren(vnode, newVnode, node, parentContext)
+        updateVelem(vnode, newVnode, node, parentContext)
     }
     return node
 }
